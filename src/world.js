@@ -15,13 +15,14 @@ function initWorld(scene) {
     light = SpotLight(scene, "light", BABYLON.Vector3.Zero(), Vec3(0, -1, 0), 0.8, 2, 0.5);
 
     var ground_mat = createTextureMaterial(scene, "tex1", "grass.png", Vec2(1.0, 1.0));
-    var plane = createPlane(scene, "ground", Vec3(0, 0, 0), Vec2(50, 50), ground_mat);
+    //var plane = createPlane(scene, "ground", Vec3(0, 0, 0), Vec2(50, 50), ground_mat);
+    var ground = loadMesh(loader, "Ground", "Ground.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), ground_mat);
 
     var tree_mat = createColorMaterial(scene, "col1", new BABYLON.Color3(0.4, 0.3, 0.1))
     var tree = loadMesh(loader, "Tree", "DeadTree1.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), tree_mat);
 
 
-    var player_mat = createColorMaterial(scene, "col1", new BABYLON.Color3(0.2, 0.5, 0.8))
+    var player_mat = createColorMaterial(scene, "col2", new BABYLON.Color3(0.2, 0.5, 0.8))
     player = loadMesh(loader, "Player", "Dude.obj", Vec3(4, 1.5, -4), Vec3(0.5, 0.5, 0.5), player_mat);
 
     loader.load();
