@@ -6,7 +6,7 @@
 var width = 640;
 var height = 480;
 var camera;
-
+var git = "https://raw.githubusercontent.com/XzekyeX/Sandbox/master/";
 function init() {
     var game = $("<canvas width=\"" + width + "\" height=\"" + height + "\" />");
     $("#game").append(game);
@@ -65,7 +65,7 @@ function createScene(canvas, engine) {
 
 function createTextureMaterial(scene, name, file, scale) {
     var mat = new BABYLON.StandardMaterial(name, scene);
-    mat.diffuseTexture = new BABYLON.Texture("res/textures/" + file, scene);
+    mat.diffuseTexture = new BABYLON.Texture(git + "res/textures/" + file, scene);
     mat.diffuseTexture.uScale = scale.x;
     mat.diffuseTexture.vScale = scale.y;
     return mat;
@@ -103,7 +103,7 @@ function SpotLight(scene, name, pos, dir, angle, exponent, intensity) {
 }
 
 function loadMesh(loader, name, obj, pos, scale, mat) {
-    var mt = loader.addMeshTask(name, "", "res/models/", obj);
+    var mt = loader.addMeshTask(name, "", git + "res/models/", obj);
     var deferred = $.Deferred();
     mt.onSuccess = function (task) {
         var mesh = task.loadedMeshes[0];
