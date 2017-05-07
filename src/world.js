@@ -3,7 +3,7 @@
 * @author Mikko Tekoniemi 
 * 
 */
-var player, light;
+var player, light, ground;
 var offset = new BABYLON.Vector3(0, 12.0, 0);
 var TREES = [];
 function initWorld(scene) {
@@ -18,7 +18,7 @@ function initWorld(scene) {
 
     var ground_mat = createTextureMaterial(scene, "tex1", "grass.png", Vec2(1.0, 1.0));
     //var plane = createPlane(scene, "ground", Vec3(0, 0, 0), Vec2(50, 50), ground_mat);
-    var ground = loadMesh(loader, "Ground", "GroundTest2.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), ground_mat);
+    ground = loadMesh(loader, "Ground", "GroundTest2.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), ground_mat);
 
     var player_mat = createColorMaterial(scene, "col2", new BABYLON.Color3(0.2, 0.5, 0.8))
     player = loadMesh(loader, "Player", "Dude.obj", Vec3(4, 1.5, -4), Vec3(0.5, 0.5, 0.5), player_mat);
@@ -33,7 +33,7 @@ function initWorld(scene) {
     ground.then(function (gtask) {
         dead_tree.then(function (task) {
             task.position = getAvailableTreePos(gtask, scene);
-            TREES.push(tree);
+            TREES.push(dead_tree);
             for (var i = 0; i < amount; i++) {
                 var t = task.clone(task.name);
                 t.id = task.name + (TREES.length + 1);
@@ -82,6 +82,10 @@ function checkTreePos(pos) {
 var rad = 1.5707963267948966;
 function updateWorld(scene) {
     player.then(function (task) {
+        ground.then(function (gtask) {
+            var h = getMeshMaximumBounds(task);
+            task.position.y = (getMeshY(task.position.x, task.position.z, gtask, scene) + (h.y / 2));
+        });
         var speed = 0.1;
         var rotate = 0.1;
         if (isKeyDown(Keys.Q)) task.rotation.y -= rotate;
