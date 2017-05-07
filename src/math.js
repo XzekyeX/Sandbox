@@ -126,3 +126,20 @@ function getCurrentTimeMills() {
 function clamp(value, min, max) {
     return value >= max ? max : value <= min ? min : value;
 }
+
+function getMeshMaximumBounds(mesh) {
+    return mesh.getBoundingInfo().maximum;
+}
+function getMeshMinimumBounds(mesh) {
+    return mesh.getBoundingInfo().minimum;
+}
+
+function getMeshY(x, z, mesh, scene) {
+    var maxY = getMeshMaximumBounds(mesh).y;
+    var pos = Vec3(x, maxY, z);
+    var ray = new BABYLON.Ray(pos, Vec3(0, -1, 0));
+    var collide = scene.pickWithRay(ray, function (item) {
+        if (item === mesh) return true;
+    });
+    return (maxY - collide.distance);
+}

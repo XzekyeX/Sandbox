@@ -7,6 +7,7 @@ var player, light;
 var offset = new BABYLON.Vector3(0, 12.0, 0);
 var TREES = [];
 function initWorld(scene) {
+    scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
     var loader = new BABYLON.AssetsManager(scene);
 
     scene.clearColor = new BABYLON.Color3(0.2, 0.2, 0.8);
@@ -19,33 +20,52 @@ function initWorld(scene) {
     //var plane = createPlane(scene, "ground", Vec3(0, 0, 0), Vec2(50, 50), ground_mat);
     var ground = loadMesh(loader, "Ground", "GroundTest2.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), ground_mat);
 
-    var tree_mat = createColorMaterial(scene, "col1", new BABYLON.Color3(0.4, 0.3, 0.1))
-    var tree = loadMesh(loader, "Tree", "DeadTree1.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), tree_mat);
-
-
     var player_mat = createColorMaterial(scene, "col2", new BABYLON.Color3(0.2, 0.5, 0.8))
     player = loadMesh(loader, "Player", "Dude.obj", Vec3(4, 1.5, -4), Vec3(0.5, 0.5, 0.5), player_mat);
+
+    var tree_mat = createColorMaterial(scene, "col1", new BABYLON.Color3(0.4, 0.3, 0.1))
+    var dead_tree = loadMesh(loader, "Dead Tree", "DeadTree1.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), tree_mat);
+    var tree = loadMesh(loader, "Tree", "TreeB2.obj", Vec3(0, 0, 0), Vec3(1.0, 1.0, 1.0), tree_mat);
 
     loader.load();
 
     var amount = 100;
-    tree.then(function (task) {
-        for (var i = 0; i < amount; i++) {
-            var t = task.clone(task.name);
-            t.id = task.name + (TREES.length + 1);
-            var pos = getAvailableTreePos(-25, 25);
-            t.position = pos;
-            TREES.push(t);
-            //console.log("new tree has been created! on pos:", t.position);
-        }
+    ground.then(function (gtask) {
+        dead_tree.then(function (task) {
+            task.position = getAvailableTreePos(gtask, scene);
+            TREES.push(tree);
+            for (var i = 0; i < amount; i++) {
+                var t = task.clone(task.name);
+                t.id = task.name + (TREES.length + 1);
+                var pos = getAvailableTreePos(gtask, scene);
+                t.position = pos;
+                TREES.push(t);
+            }
+        });
+        tree.then(function (task) {
+            task.position = getAvailableTreePos(gtask, scene);
+            TREES.push(tree);
+            for (var i = 0; i < amount; i++) {
+                var t = task.clone(task.name);
+                t.id = task.name + (TREES.length + 1);
+                var pos = getAvailableTreePos(gtask, scene);
+                t.position = pos;
+                TREES.push(t);
+            }
+        });
+        player.then(function (task) {
+            task.applyGravity = true;
+        });
     });
 }
 
-function getAvailableTreePos(min, max) {
-    var x = rand(min, max);
-    var z = rand(min, max);
-    var pos = Vec3(x, 0, z);
-    if (!checkTreePos(pos)) {
+function getAvailableTreePos(ground, scene) {
+    var bound = ground.getBoundingInfo();
+    var x = rand(bound.minimum.x, bound.maximum.x);
+    var z = rand(bound.minimum.z, bound.maximum.z);
+    var y = getMeshY(x, z, ground, scene);
+    var pos = Vec3(x, y, z);
+    if (checkTreePos(pos)) {
         console.log("Not Available Pos:", pos);
         return getAvailableTreePos();
     }
@@ -54,10 +74,11 @@ function getAvailableTreePos(min, max) {
 
 function checkTreePos(pos) {
     for (var tree in TREES) {
-        if (tree.position == pos) return false;
+        if (TREES[tree].position === pos) return true;
     }
-    return true;
+    return false;
 }
+
 var rad = 1.5707963267948966;
 function updateWorld(scene) {
     player.then(function (task) {
@@ -85,5 +106,6 @@ function updateWorld(scene) {
         light.position = addVec3(task.position, Vec3(0, 3, 0));
         light.direction.x = Math.sin((task.rotation.y));
         light.direction.z = Math.cos((task.rotation.y));
+        // camera.setPosition(Vec3(task.position.x, task.position.y, task.position.z));
     });
 }
