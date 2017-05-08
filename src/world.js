@@ -52,7 +52,7 @@ class Ground {
 
 class Tree {
     constructor(scene, loader, pos, size, obj, texture) {
-        this.material = createTextureMaterial(scene, "Tree_Texture", texture, Vec2(1.0, 1.0));
+        //this.material = createTextureMaterial(scene, "Tree_Texture", texture, Vec2(1.0, 1.0));
         this.model = loadMesh(loader, "Tree", obj, pos, size, this.material);
         this.model.then((e) => (this.mesh = e, this.maximum = e.getBoundingInfo().maximum, this.loaded = true));
     }
