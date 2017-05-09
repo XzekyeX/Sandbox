@@ -68,12 +68,14 @@ function createTextureMaterial(scene, name, file, scale) {
     mat.diffuseTexture = new BABYLON.Texture(git + "res/textures/" + file, scene);
     mat.diffuseTexture.uScale = scale.x;
     mat.diffuseTexture.vScale = scale.y;
+    mat.specularColor = BABYLON.Color3.Black();
     return mat;
 }
 
 function createColorMaterial(scene, name, color) {
     var mat = new BABYLON.StandardMaterial(name, scene);
     mat.diffuseColor = color;
+    mat.specularColor = BABYLON.Color3.Black();
     return mat;
 }
 

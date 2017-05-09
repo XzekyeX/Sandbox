@@ -18,8 +18,8 @@ function initWorld(scene) {
 
     player = new Player(scene, loader, Vec3(0, 0, 0), 0.1, 0.1);
 
-    new Model(scene, loader, "Dead_Tree", "DeadTree1.obj", "dead_tree.png", Vec3(0, 0, 0), Vec3(1, 1, 1));
-
+    var tree = new Model(scene, loader, "Dead_Tree", "DeadTree1.obj", "dead_tree.png", Vec3(0, 0, 0), Vec3(1, 1, 1));
+    console.log("tree:", tree);
     loader.load();
 
 }
