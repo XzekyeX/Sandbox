@@ -7,7 +7,14 @@ var width = 640;
 var height = 480;
 var camera;
 var git = "https://raw.githubusercontent.com/XzekyeX/Sandbox/master/";
+
+var local = false;
+
 function init() {
+    // if (!BABYLON.Engine.isSupported()) {
+    //     console.warn("Babylon engine is not supported! Please enable WebGL!");
+    //     return;
+    // }
     var game = $("<canvas width=\"" + width + "\" height=\"" + height + "\" />");
     $("#game").append(game);
     var engine = new BABYLON.Engine(game[0], true);
@@ -53,19 +60,17 @@ function update(scene) {
 }
 
 function createScene(canvas, engine) {
-
     var scene = new BABYLON.Scene(engine);
     camera = new BABYLON.ArcRotateCamera("camera", -1.57, 1, 40, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(canvas, false);
     initWorld(scene);
-
     return scene;
 }
 
 
 function createTextureMaterial(scene, name, file, scale) {
     var mat = new BABYLON.StandardMaterial(name, scene);
-    mat.diffuseTexture = new BABYLON.Texture(git + "res/textures/" + file, scene);
+    mat.diffuseTexture = new BABYLON.Texture(local ? "res/textures/" + file : git + "res/textures/" + file, scene);
     mat.diffuseTexture.uScale = scale.x;
     mat.diffuseTexture.vScale = scale.y;
     mat.specularColor = BABYLON.Color3.Black();
@@ -105,7 +110,7 @@ function SpotLight(scene, name, pos, dir, angle, exponent, intensity) {
 }
 
 function loadMesh(loader, name, obj, pos, scale, mat) {
-    var mt = loader.addMeshTask(name, "", git + "res/models/", obj);
+    var mt = loader.addMeshTask(name, "", local ? "res/models/" : git + "res/models/", obj);
     var deferred = $.Deferred();
     mt.onSuccess = function (task) {
         var mesh = task.loadedMeshes[0];
