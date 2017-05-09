@@ -1,6 +1,5 @@
 # Blender v2.77 (sub 0) OBJ File: 'Ground.blend'
 # www.blender.org
-mtllib TorchHandle.mtl
 o TorchHandle_Cylinder.035
 v -1.175182 -0.471511 70.504402
 v -1.175182 -0.320191 70.504402

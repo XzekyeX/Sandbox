@@ -1,6 +1,5 @@
 # Blender v2.77 (sub 0) OBJ File: 'Ground.blend'
 # www.blender.org
-mtllib GroundTest2.mtl
 o Plane
 v -208.815323 -0.267907 205.847687
 v 206.498016 3.505891 209.193985

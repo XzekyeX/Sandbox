@@ -3,25 +3,14 @@
 * @author Mikko Tekoniemi 
 * 
 */
-class Player {
+class Player extends Model {
     constructor(scene, loader, pos, speed, rotate) {
-        this.scene = scene;
+        super(scene, loader, "Player", "Dude.obj", "grass.png", pos, Vec3(1, 1, 1), Vec3(1, 1, 1), 1, 0.001, 1.5);
         this.speed = speed;
         this.rotate = rotate;
         this.rad = 1.5707963267948966;
-        this.size = Vec3(0.5, 0.5, 0.5);
         this.lamp = SpotLight(scene, "lamp", BABYLON.Vector3.Zero(), Vec3(0, -1, 0), 0.8, 2, 0.5);
-        this.material = createColorMaterial(scene, "Player_Color", new BABYLON.Color3(0.2, 0.5, 0.8));
-        this.model = loadMesh(loader, "Player", "Dude.obj", pos, this.size, this.material);
-        this.model.then((e) => (this.mesh = e, this.maximum = e.getBoundingInfo().maximum, this.loaded = true, this.init(e)));
         this.ray = new BABYLON.Ray(pos, Vec3(0, -1, 0));
-        this.mass = 1;
-        this.friction = 0.001;
-        this.restitution = 1.5;
-    }
-
-    init(e) {
-        e.physicsImpostor = new BABYLON.PhysicsImpostor(e, BABYLON.PhysicsEngine.BoxImpostor, { mass: this.mass, restitution: this.restitution, friction: this.friction }, this.scene);
     }
 
     getDistance(max, mesh) {
@@ -52,13 +41,8 @@ class Player {
             this.mesh.position.x += Math.sin(this.mesh.rotation.y) * this.speed;
             this.mesh.position.z += Math.cos(this.mesh.rotation.y) * this.speed;
         }
-        // if (!this.jump && isKeyDown(Keys.SPACE)) {
-        //     this.jump = true;
-        // }
-
         this.ray.origin.x = this.mesh.position.x;
         this.ray.origin.z = this.mesh.position.z;
-        // console.log("ray:", this.ray);
         this.lamp.position = this.mesh.position;
         this.lamp.direction.x = Math.sin(this.mesh.rotation.y);
         this.lamp.direction.z = Math.cos(this.mesh.rotation.y);

@@ -1,6 +1,5 @@
 # Blender v2.77 (sub 0) OBJ File: 'Ground.blend'
 # www.blender.org
-mtllib TorchTop.mtl
 o TorchTop_Cylinder.036
 v -1.175182 -0.320191 70.504402
 v -1.165592 -0.320191 70.509941
