@@ -48,8 +48,13 @@ function Vec2(x, y) {
 }
 
 function rand(min, max) {
-    return Math.floor((Math.random() * (max - min)) + min);
+    return min == max ? min : Math.floor((Math.random() * (max - min)) + min);
 }
+
+function randFloat(min, max) {
+    return min == max ? min : (Math.random() * (max - min) + min);
+}
+
 // Converts from degrees to radians.
 function toRadians(degrees) {
     return degrees * Math.PI / 180;
@@ -142,4 +147,8 @@ function getMeshY(x, z, mesh, scene) {
         if (item === mesh) return true;
     });
     return (maxY - collide.distance);
+}
+
+function Color(r, g, b) {
+    return BABYLON.Color3.FromInts(r, g, b);
 }

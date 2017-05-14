@@ -5,7 +5,7 @@
 */
 class Player extends Model {
     constructor(scene, loader, pos, speed, rotate) {
-        super(scene, loader, "Player", "Dude.obj", "grass.png", pos, Vec3(1, 1, 1), Vec3(1, 1, 1), 1, 0.001, 1.5);
+        super(scene, loader, "Player", "Dude.obj", "grass.png", pos, Vec3(1, 1, 1), Vec3(1, 1, 1), 1, 0.001, 0.5, true);
         this.speed = speed;
         this.rotate = rotate;
         this.rad = 1.5707963267948966;
@@ -46,6 +46,7 @@ class Player extends Model {
         this.lamp.position = this.mesh.position;
         this.lamp.direction.x = Math.sin(this.mesh.rotation.y);
         this.lamp.direction.z = Math.cos(this.mesh.rotation.y);
+        // this.mesh.updatePhysicsBodyPosition();
     }
     setY(y) {
         if (!this.loaded) return;
@@ -54,5 +55,13 @@ class Player extends Model {
     addY(y) {
         if (!this.loaded) return;
         this.mesh.position.y += y;
+    }
+    setAngularVelocity(x, y, z, q) {
+        if (!this.loaded) return;
+        this.mesh.physicsImpostor.setAngularVelocity(new BABYLON.Quaternion(x, y, z, q));
+    }
+
+    getRotation() {
+        return this.loaded ? this.mesh.rotation : BABYLON.Vector3.Zero();
     }
 }

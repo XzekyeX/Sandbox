@@ -11,10 +11,10 @@ var git = "https://raw.githubusercontent.com/XzekyeX/Sandbox/master/";
 var local = false;
 
 function init() {
-    // if (!BABYLON.Engine.isSupported()) {
-    //     console.warn("Babylon engine is not supported! Please enable WebGL!");
-    //     return;
-    // }
+    if (!BABYLON.Engine.isSupported()) {
+        console.warn("Babylon engine is not supported! Please enable WebGL!");
+        return;
+    }
     var game = $("<canvas width=\"" + width + "\" height=\"" + height + "\" />");
     $("#game").append(game);
     var engine = new BABYLON.Engine(game[0], true);
@@ -29,13 +29,13 @@ function init() {
     var scene = createScene(game[0], engine);
     var delta = 0;
     var ns = 1000000000 / 60.0;
-    var lastTime = window.performance.now();
+    var lastTime = getCurrentTimeMills();//window.performance.now();  // FIX ME
     var timer = getCurrentTimeMills();
     var ups = 0;
     var showFps = $("<b style=\"font-size: 20px; color:white;\"></b>");
     $("#fps").append(showFps);
     engine.runRenderLoop(function () {
-        var now = window.performance.now();
+        var now = getCurrentTimeMills();//window.performance.now();  //FIX ME
         delta += (now - lastTime) * 0.06;
         lastTime = now;
         while (delta >= 1) {
@@ -53,6 +53,8 @@ function init() {
         }
     });
 }
+
+// function current
 
 
 function update(scene) {
