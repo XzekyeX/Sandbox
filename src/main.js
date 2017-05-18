@@ -15,6 +15,9 @@ function init() {
         console.warn("Babylon engine is not supported! Please enable WebGL!");
         return;
     }
+    var agent = navigator.userAgent;
+    var android = agent.includes("Android");
+    console.log("Agent", agent, "is Android:", android);
     var game = $("<canvas width=\"" + width + "\" height=\"" + height + "\" />");
     $("#game").append(game);
     var engine = new BABYLON.Engine(game[0], true);
@@ -34,16 +37,22 @@ function init() {
     var ups = 0;
     var showFps = $("<b style=\"font-size: 20px; color:white;\"></b>");
     $("#fps").append(showFps);
+    setInterval(function () {
+        updateInput();
+        update(scene);
+        ups++;
+    }, 17);
     engine.runRenderLoop(function () {
-        var now = getCurrentTimeMills();//window.performance.now();  //FIX ME
-        delta += (now - lastTime) * 0.06;
-        lastTime = now;
-        while (delta >= 1) {
-            delta--;
-            updateInput();
-            update(scene);
-            ups++;
-        }
+        // var now = getCurrentTimeMills();//window.performance.now();  //FIX ME
+        // delta += (now - lastTime) * 0.06;
+        // lastTime = now;
+        // while (delta >= 1) {
+        //     delta--;
+        //     updateInput();
+        //     update(scene);
+        //     ups++;
+        // }
+
         scene.render();
         if ((getCurrentTimeMills() - timer) >= 1000) {
             timer += 1000;
@@ -70,11 +79,12 @@ function createScene(canvas, engine) {
 }
 
 
-function createTextureMaterial(scene, name, file, scale) {
+function createTextureMaterial(scene, name, file, scale, backFaceCulling) {
     var mat = new BABYLON.StandardMaterial(name, scene);
     mat.diffuseTexture = new BABYLON.Texture(local ? "res/textures/" + file : git + "res/textures/" + file, scene);
     mat.diffuseTexture.uScale = scale.x;
     mat.diffuseTexture.vScale = scale.y;
+    mat.backFaceCulling = backFaceCulling;
     mat.specularColor = BABYLON.Color3.Black();
     return mat;
 }

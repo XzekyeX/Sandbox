@@ -4,20 +4,37 @@
 * 
 */
 class Tree extends BABYLON.Mesh {
-    constructor(scene, pos, segments, size, branchColor, trunkColor, shadow) {
+    constructor(scene, pos, branchData, trunkData, branchColor, trunkColor, shadow) {
         super("tree", scene);
         this.position = pos;
         this.material = createColorMaterial(scene, "branch_mat", branchColor);
-        this.vertex = BABYLON.VertexData.CreateSphere({ segments: segments, diameterX: size.x, diameterY: size.y, diameterZ: size.z });
+        this.branchData = branchData;
+        this.trunkData = trunkData;
+        //console.log(this.trunkData);
+        //options: { segments?: number, diameter?: number, diameterX?: number, diameterY?: number, diameterZ?: number, arc?: number, slice?: number, sideOrientation?: number }
+        this.vertex = BABYLON.VertexData.CreateSphere({ segments: branchData.segments, diameterX: branchData.width, diameterY: branchData.height, diameterZ: branchData.depth });
         this.vertex.applyToMesh(this, false);
-        var height = 7, dTop = 2, dBot = 6;
-        this.trunk = BABYLON.Mesh.CreateCylinder("trunk", height, dTop, dBot, 5, 2, scene);
+        //name: string, height: number, diameterTop: number, diameterBottom: number, tessellation: number, subdivisions: any, scene: Scene, updatable?: any, sideOrientation?: number
+        this.trunk = BABYLON.Mesh.CreateCylinder("trunk", trunkData.height, trunkData.dTop, trunkData.dBot, trunkData.tessellation, trunkData.subdivisions, scene);
+
         this.trunk.material = createColorMaterial(scene, "trunk_mat", trunkColor);
         this.trunk.parent = this;
-        this.trunk.position.y = -height;
+        this.trunk.position.y = -trunkData.height + 1;//-trunkSize.x + 1;
+        this.ray = new BABYLON.Ray(this.position, Vec3(0, -1, 0));
+        this.isGround = false;
         this.build();
         shadow.getShadowMap().renderList.push(this);
         shadow.getShadowMap().renderList.push(this.trunk);
+    }
+
+    toGround(scene, ground) {
+        if (!this.isGround) {
+            var dist = getMeshY(this.position.x, this.position.z, ground, scene);
+            var height = dist + this.trunkData.height + 1;
+            this.position.y = height;
+            //console.log(height);
+            this.isGround = true;
+        }
     }
 
     build() {
@@ -42,8 +59,8 @@ class Tree extends BABYLON.Mesh {
                 map.push(val);
             }
         }
-        var max = 1;
-        var min = -1;
+        var max = 0.5;
+        var min = -0.5;
         for (var item in map) {
             var val = map[item];
             var rx = randFloat(min, max);

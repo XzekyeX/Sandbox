@@ -3,9 +3,7 @@
 * @author Mikko Tekoniemi 
 * 
 */
-var player, light, ground;
-var offset = new BABYLON.Vector3(0, 12.0, 0);
-var TREES = [];
+var player, light, ground, trees = [];
 function initWorld(scene) {
     scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.OimoJSPlugin());
     var loader = new BABYLON.AssetsManager(scene);
@@ -22,22 +20,22 @@ function initWorld(scene) {
     d1.position = new BABYLON.Vector3(-300, 300, 600);
     var shadowGenerator = new BABYLON.ShadowGenerator(2048, d1);
 
+    ground = new Model(scene, "Ground", "Ground.obj", "grass.png", Vec3(0, 0, 0));
 
-    ground = new Model(scene, loader, "Ground", "Ground.obj", "grass.png", Vec3(0, 0, 0), Vec3(0.2, 0.2, 0.2), Vec2(6, 6), 0, 0, 1, true);
-
-    player = new Player(scene, loader, Vec3(0, 10, 0), 0.1, 0.1);
-
-    // var tree = new Model(scene, loader, "Dead_Tree", "DeadTree1.obj", "dead_tree.png", Vec3(0, 0, 0), Vec3(1, 1, 1), Vec2(1, 1), 0, 0, 0, false);
-
-    var tree = new Tree(scene, Vec3(0, 11, 0), 2, Vec3(10, 10, 10), Color(34, 139, 34), Color(139, 69, 19), shadowGenerator);
+    for (var x = -5; x < 5; x++) {
+        for (var z = -5; z < 5; z++) {
+            trees.push(new Tree(scene, Vec3(x * 15, 11, z * 15), { segments: 2, width: 8, height: 5, depth: 8 }, { height: 5, dTop: 1, dBot: 2, tessellation: 5, subdivisions: 2 }, Color(34, 139, 34), Color(139, 69, 19), shadowGenerator));
+        }
+    }
 
     loader.load();
 
 }
 
 function updateWorld(scene) {
-    player.movement();
-    // player.setAngularVelocity(0, 1, 0, player.getRotation().y);
-    // player.setRot(0, 0);
-    ground.setPos(0, 0, 0);
+    if (ground.loaded) {
+        for (var tree in trees) {
+            trees[tree].toGround(scene, ground);
+        }
+    }
 }
