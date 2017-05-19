@@ -13,9 +13,12 @@ class Model extends BABYLON.Mesh {
         this.lowPoly = true;
         this.obj = obj;
         this.loaded = false;
+        this.removed = false;
         this.build();
     }
+    buildInit() {
 
+    }
     build() {
         this.file = loadFile(this.obj);
         var that = this;
@@ -34,7 +37,7 @@ class Model extends BABYLON.Mesh {
 
 
             if (that.lowPoly) that.convertToFlatShadedMesh();
-
+            that.buildInit();
             that.loaded = true;
         });
 

@@ -128,7 +128,7 @@ function getCurrentTimeMills() {
 }
 
 //value min max
-function clamp(value, min, max) {
+function Clamp(value, min, max) {
     return value >= max ? max : value <= min ? min : value;
 }
 
@@ -151,4 +151,8 @@ function getMeshY(x, z, mesh, scene) {
 
 function Color(r, g, b) {
     return BABYLON.Color3.FromInts(r, g, b);
+}
+
+function LerpColor(startColor, endColor, amount) {
+    return BABYLON.Color3.Lerp(startColor, endColor, amount);
 }

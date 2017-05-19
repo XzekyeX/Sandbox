@@ -8,6 +8,8 @@ class Tree extends BABYLON.Mesh {
         super("tree", scene);
         this.position = pos;
         this.material = createColorMaterial(scene, "branch_mat", branchColor);
+        this.branchColor = branchColor;
+        this.trunkColor = trunkColor;
         this.branchData = branchData;
         this.trunkData = trunkData;
         //console.log(this.trunkData);
@@ -22,9 +24,19 @@ class Tree extends BABYLON.Mesh {
         this.trunk.position.y = -trunkData.height + 1;//-trunkSize.x + 1;
         this.ray = new BABYLON.Ray(this.position, Vec3(0, -1, 0));
         this.isGround = false;
+        this.removed = false;
+        this.lifeOri = rand(600, 3000);
+        this.life = this.lifeOri;
         this.build();
         shadow.getShadowMap().renderList.push(this);
         shadow.getShadowMap().renderList.push(this.trunk);
+    }
+
+    update() {
+        this.life -= 1;
+        var amt = (this.life / this.lifeOri);
+        this.material.diffuseColor = LerpColor(this.branchColor, Color(this.branchColor.r, 0, this.branchColor.b), 1 - amt);
+        if (this.life <= 0) this.removed = true;
     }
 
     toGround(scene, ground) {
