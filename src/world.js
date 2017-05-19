@@ -22,6 +22,8 @@ function initWorld(scene) {
 
     ground = new Model(scene, "Ground", "Ground.obj", "grass.png", Vec3(0, 0, 0));
 
+    player = new Player(scene, Vec3(0, 5, 0), 0.5, 0.2);
+
     for (var x = -5; x < 5; x++) {
         for (var z = -5; z < 5; z++) {
             var tree = new Tree(scene, Vec3(x * 15, 11, z * 15), { segments: 2, width: 8, height: 5, depth: 8 }, { height: 5, dTop: 1, dBot: 2, tessellation: 5, subdivisions: 2 }, Color(34, 139, 34), Color(139, 69, 19), shadowGenerator);
