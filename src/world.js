@@ -22,7 +22,7 @@ function initWorld(scene) {
 
     ground = new Model(scene, "Ground", "Ground.obj", "grass.png", Vec3(0, 0, 0));
 
-    player = new Player(scene, Vec3(0, 5, 0), 0.5, 0.2);
+    player = new Player(scene, Vec3(0, 16, 0), 0.5, 0.1);
 
     for (var x = -5; x < 5; x++) {
         for (var z = -5; z < 5; z++) {
@@ -36,19 +36,16 @@ function initWorld(scene) {
     ground.buildInit = function () {
         for (var tree in trees) {
             trees[tree].toGround(scene, ground);
-            // if (inits[tree].isGround) {
-            //     remove(inits, tree);
-            // } 
         }
     };
 
 }
 
 function updateWorld(scene) {
+    player.update();
     for (var tree in trees) {
         trees[tree].update();
         if (trees[tree].removed) {
-            //console.log("dispose trees[" + tree + "]:", trees[tree]);
             trees[tree].dispose();
             remove(trees, tree);
         }
@@ -58,6 +55,5 @@ function updateWorld(scene) {
 function remove(list, index) {
     if (index > -1) {
         list.splice(index, 1);
-        // console.log("Removing index: " + index);
     }
 }

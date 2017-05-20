@@ -25,17 +25,28 @@ class Tree extends BABYLON.Mesh {
         this.ray = new BABYLON.Ray(this.position, Vec3(0, -1, 0));
         this.isGround = false;
         this.removed = false;
-        this.lifeOri = rand(600, 3000);
+        this.lifeOri = rand(3000, 12000);
         this.life = this.lifeOri;
         this.build();
+        // this.physicsImpostor = new BABYLON.PhysicsImpostor(this, BABYLON.PhysicsEngine.BoxImpostor, {
+        //     mass: 0,
+        //     friction: 0,
+        //     restitution: 0.5,
+        //     nativeOptions: {
+        //         noSleep: true,
+        //         move: false
+        //     }
+        // });
+
         shadow.getShadowMap().renderList.push(this);
         shadow.getShadowMap().renderList.push(this.trunk);
     }
 
     update() {
         this.life -= 1;
-        var amt = (this.life / this.lifeOri);
-        this.material.diffuseColor = LerpColor(this.branchColor, Color(this.branchColor.r, 0, this.branchColor.b), 1 - amt);
+        var amt = 1 - (this.life / this.lifeOri);
+        this.rotation.x = amt;
+        this.material.diffuseColor = LerpColor(this.branchColor, Color(this.branchColor.r, 0, this.branchColor.b), amt);
         if (this.life <= 0) this.removed = true;
     }
 

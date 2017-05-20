@@ -37,11 +37,51 @@ function init() {
     var ups = 0;
     var showFps = $("<b style=\"font-size: 20px; color:white;\"></b>");
     $("#fps").append(showFps);
-    setInterval(function () {
+    //https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+    // setInterval(function () {
+    //     updateInput();
+    //     update(scene);
+    //     ups++;
+    // }, 17);
+
+    var worker = new Worker("time_worker.js");
+    var workerTimer = {
+        id: 0,
+        callbacks: {},
+
+        setInterval: function (cb, interval, context) {
+            this.id++;
+            var id = this.id;
+            this.callbacks[id] = { fn: cb, context: context };
+            worker.postMessage({ command: 'interval:start', interval: interval, id: id });
+            return id;
+        },
+
+        onMessage: function (e) {
+            switch (e.data.message) {
+                case 'interval:tick':
+                    var callback = this.callbacks[e.data.id];
+                    if (callback && callback.fn) callback.fn.apply(callback.context);
+                    break;
+                case 'interval:cleared':
+                    delete this.callbacks[e.data.id];
+                    break;
+            }
+        },
+
+        clearInterval: function (id) {
+            worker.postMessage({ command: 'interval:clear', id: id });
+        }
+    };
+
+    worker.onmessage = workerTimer.onMessage.bind(workerTimer);
+
+    workerTimer.setInterval(function () {
         updateInput();
         update(scene);
         ups++;
-    }, 17);
+    }, 17, false);
+
     engine.runRenderLoop(function () {
         // var now = getCurrentTimeMills();//window.performance.now();  //FIX ME
         // delta += (now - lastTime) * 0.06;

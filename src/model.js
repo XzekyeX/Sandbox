@@ -15,6 +15,9 @@ class Model extends BABYLON.Mesh {
         this.loaded = false;
         this.removed = false;
         this.build();
+        // this.physicsImpostor = new BABYLON.PhysicsImpostor(this, BABYLON.PhysicsEngine.BoxImpostor, {
+        //     mass: 0
+        // });
     }
     buildInit() {
 

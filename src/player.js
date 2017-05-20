@@ -4,6 +4,17 @@ class Player extends Model {
         this.speed = speed;
         this.rotate = rotate;
         this.rad = 1.5707963267948966;
+        this.scaling = Vec3(0.2, 0.2, 0.2);
+    }
+
+
+    buildInit() {
+        console.log("scale:", this.scaling);
+        // this.physicsImpostor = new BABYLON.PhysicsImpostor(this, BABYLON.PhysicsEngine.BoxImpostor, {
+        //     mass: 0.5,
+        //     friction: 0.5,
+        //     restitution: 0.7
+        // });
     }
 
     update() {
